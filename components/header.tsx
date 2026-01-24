@@ -40,7 +40,7 @@ export default function Header() {
             {/* Logo */}
             <Link href="/" className="flex items-center">
               <img
-                src="/SALEH.PNG"
+                src="/salehalazhar.png"
                 alt="صالح الأزهري للمقاولات"
                 className="h-12 w-auto"
               />

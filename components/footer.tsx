@@ -48,7 +48,7 @@ export default function Footer() {
           <div>
             <div className="mb-6 bg-white p-3 rounded-lg inline-block">
               <img
-                src="/SALEH.PNG"
+                src="/salehalazhar.png"
                 alt="صالح الأزهري للمقاولات العامة والتشطيبات بالمدينة المنورة"
                 className="h-16 w-auto"
               />
