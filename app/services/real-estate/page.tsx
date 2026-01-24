@@ -82,6 +82,35 @@ export default function RealEstatePage() {
     <main className="min-h-screen">
       <Header />
       <ServiceDetail service={service} />
+
+      {/* CTA */}
+      <section className="bg-[#f5f5f5] py-10">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-2xl font-bold mb-4">
+            مهتم بهذه الخدمة بالمدينة المنورة؟
+          </h2>
+          <p className="mb-6 text-lg">
+            تواصل معنا الآن للحصول على استشارة مجانية وعرض سعر مخصص لمشروعك في المدينة المنورة
+          </p>
+
+          <div className="flex justify-center gap-4">
+            <a
+              href="https://www.salehalazhari.com/contact"
+              className="px-6 py-3 rounded-lg bg-[#1f2937] text-white font-bold"
+            >
+              احصل على عرض سعر
+            </a>
+
+            <a
+              href="/services"
+              className="px-6 py-3 rounded-lg border border-[#1f2937] font-bold"
+            >
+              عودة للخدمات
+            </a>
+          </div>
+        </div>
+      </section>
+
       <Footer />
       <FloatingContact />
 

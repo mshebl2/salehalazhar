@@ -68,6 +68,35 @@ export default function RenovationPage() {
     <main className="min-h-screen">
       <Header />
       <ServiceDetail service={service} />
+
+      {/* CTA Section */}
+      <section className="bg-[#f5f5f5] py-10">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-2xl font-bold mb-4">
+            مهتم بهذه الخدمة بالمدينة المنورة؟
+          </h2>
+          <p className="mb-6 text-lg">
+            تواصل معنا الآن للحصول على استشارة مجانية وعرض سعر مخصص لمشروعك في المدينة المنورة
+          </p>
+
+          <div className="flex justify-center gap-4">
+            <a
+              href="https://www.salehalazhari.com/contact"
+              className="px-6 py-3 rounded-lg bg-[#1f2937] text-white font-bold"
+            >
+              احصل على عرض سعر
+            </a>
+
+            <a
+              href="/services"
+              className="px-6 py-3 rounded-lg border border-[#1f2937] font-bold"
+            >
+              عودة للخدمات
+            </a>
+          </div>
+        </div>
+      </section>
+
       <Footer />
       <FloatingContact />
 
@@ -79,32 +108,32 @@ export default function RenovationPage() {
             "@context": "https://schema.org",
             "@type": "Service",
             "@id": "https://www.salehalazhari.com/renovation",
-            serviceType: "اعمال الترميم والتشطيب بالمدينة المنورة",
-            name: "اعمال الترميم والتشطيب بالمدينة المنورة",
-            description:
+            "serviceType": "اعمال الترميم والتشطيب بالمدينة المنورة",
+            "name": "اعمال الترميم والتشطيب بالمدينة المنورة",
+            "description":
               "شركة صالح الازهري للمقاولات العامة تقدم خدمات الترميم والتشطيب بالمدينة المنورة، تشمل ترميم المباني القديمة، تجديد التشطيبات، اصلاح التشققات، اعمال العزل، والتشطيبات الفاخرة.",
-            url: "https://www.salehalazhari.com/renovation",
-            image: "https://www.salehalazhari.com/121214520.png",
-            provider: {
+            "url": "https://www.salehalazhari.com/renovation",
+            "image": "https://www.salehalazhari.com/121214520.png",
+            "provider": {
               "@type": "LocalBusiness",
-              name: "صالح الازهري للمقاولات العامة والتشطيبات",
-              url: "https://www.salehalazhari.com/",
-              telephone: "+966568202809",
-              address: {
+              "name": "صالح الازهري للمقاولات العامة والتشطيبات",
+              "url": "https://www.salehalazhari.com/",
+              "telephone": "+966568202809",
+              "address": {
                 "@type": "PostalAddress",
-                addressLocality: "المدينة المنورة",
-                addressCountry: "SA",
+                "addressLocality": "المدينة المنورة",
+                "addressCountry": "SA",
               },
             },
-            areaServed: {
+            "areaServed": {
               "@type": "City",
-              name: "المدينة المنورة",
+              "name": "المدينة المنورة",
             },
-            contactPoint: {
+            "contactPoint": {
               "@type": "ContactPoint",
-              telephone: "+966568202809",
-              contactType: "customer service",
-              areaServed: "SA",
+              "telephone": "+966568202809",
+              "contactType": "customer service",
+              "areaServed": "SA",
             },
           }),
         }}
