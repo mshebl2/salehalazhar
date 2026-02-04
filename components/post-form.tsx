@@ -52,9 +52,56 @@ export default function PostForm({ post, isEdit }: PostFormProps) {
                 </div>
 
                 <div className="grid gap-2">
-                    <Label htmlFor="featuredImage">Featured Image URL</Label>
-                    <Input id="featuredImage" name="featuredImage" defaultValue={post?.featuredImage} placeholder="/api/images/..." />
-                    <p className="text-xs text-muted-foreground">Copy URL from Media Library</p>
+                    <Label htmlFor="featuredImage">Featured Image</Label>
+                    <div className="flex gap-2">
+                        <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={async (e) => {
+                                const file = e.target.files?.[0]
+                                if (!file) return
+
+                                const formData = new FormData()
+                                formData.append("file", file)
+
+                                try {
+                                    setIsSubmitting(true)
+                                    const res = await fetch("/api/upload", {
+                                        method: "POST",
+                                        body: formData
+                                    })
+
+                                    if (!res.ok) throw new Error("Upload failed")
+
+                                    const data = await res.json()
+                                    // Set the value of the image input
+                                    const imageInput = document.getElementById("featuredImage") as HTMLInputElement
+                                    if (imageInput) {
+                                        imageInput.value = data.url
+                                        imageInput.dispatchEvent(new Event('change', { bubbles: true }))
+                                    }
+                                } catch (error) {
+                                    console.error("Upload error:", error)
+                                    alert("Upload failed")
+                                } finally {
+                                    setIsSubmitting(false)
+                                }
+                            }}
+                        />
+                    </div>
+                    <Input
+                        id="featuredImage"
+                        name="featuredImage"
+                        defaultValue={post?.featuredImage}
+                        placeholder="/api/images/..."
+                        readOnly
+                        className="bg-gray-50"
+                    />
+                    {post?.featuredImage && (
+                        <div className="mt-2">
+                            <img src={post.featuredImage} alt="Preview" className="h-40 w-auto object-cover rounded border" />
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex items-center gap-2">
