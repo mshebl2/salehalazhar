@@ -1,9 +1,12 @@
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import FloatingContact from "@/components/floating-contact"
-import ProjectsHero from "@/components/projects-hero"
+import PageBanner from "@/components/page-banner"
 import ProjectsGallery from "@/components/projects-gallery"
 import ProjectsStats from "@/components/projects-stats"
+import { getProjects } from "@/actions/project-actions"
+import connectDB from "@/lib/db"
+import SiteContent from "@/models/SiteContent"
 
 export const metadata = {
   title: "معرض المشاريع - صالح الأزهري للمقاولات العامة والتشطيبات بالمدينة المنورة",
@@ -11,7 +14,19 @@ export const metadata = {
     "استعرض أفضل مشاريع شركة صالح الأزهري للمقاولات العامة والتشطيبات بالمدينة المنورة، مشاريع سكنية وتجارية وصناعية بجودة عالية وتنفيذ احترافي.",
 }
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  await connectDB()
+
+  const [projects, bannerDoc] = await Promise.all([
+    getProjects(),
+    SiteContent.findOne({ key: 'banner_projects' })
+  ])
+
+  const banner = bannerDoc?.value || {}
+  const bannerImage = banner.image || '/bb.png'
+  const bannerTitle = banner.title || 'معرض المشاريع بالمدينة المنورة'
+  const bannerSubtitle = banner.subtitle || 'استعرض مجموعة من أفضل مشاريعنا المنجزة في المدينة المنورة التي تعكس خبرتنا وجودة عملنا'
+
   const pageTitle =
     "معرض المشاريع - صالح الأزهري للمقاولات العامة والتشطيبات بالمدينة المنورة"
   const pageDescription =
@@ -23,37 +38,26 @@ export default function ProjectsPage() {
     name: pageTitle,
     description: pageDescription,
     url: "https://www.salehalazhari.com/projects",
-    hasPart: [
-      {
-        "@type": "CreativeWork",
-        name: "مشروع تشطيب داخلي",
-        description: "تشطيبات داخلية عالية الجودة في المدينة المنورة.",
-      },
-      {
-        "@type": "CreativeWork",
-        name: "مشروع مقاولات عامة",
-        description: "تنفيذ مقاولات عامة بأعلى معايير الجودة.",
-      },
-    ],
+    hasPart: projects.map((p: any) => ({
+      "@type": "CreativeWork",
+      name: p.title,
+      description: p.description,
+    }))
   }
+
+  const plainProjects = JSON.parse(JSON.stringify(projects))
 
   return (
     <main className="min-h-screen">
       <Header />
-
-      {/* إضافة عنوان H1 هنا لتحسين SEO */}
-      <section className="max-w-6xl mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold mb-4 text-center text-[#0D2240]">
-          معرض مشاريع صالح الأزهري للمقاولات العامة والتشطيبات بالمدينة المنورة
-        </h1>
-        <p className="text-lg text-center text-[#2D3640] mb-10">
-          شاهد أفضل أعمالنا في التشطيبات العامة والمقاولات بالمدينة المنورة، تنفيذ احترافي وجودة عالية مع الالتزام بالمواعيد.
-        </p>
-      </section>
-
-      <ProjectsHero />
+      <PageBanner
+        image={bannerImage}
+        title={bannerTitle}
+        subtitle={bannerSubtitle}
+        fallbackImage="/bb.png"
+      />
       <ProjectsStats />
-      <ProjectsGallery />
+      <ProjectsGallery projects={plainProjects} />
 
       {/* Structured Data */}
       <script

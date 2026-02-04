@@ -1,11 +1,13 @@
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import FloatingContact from "@/components/floating-contact"
-import AboutHero from "@/components/about-hero"
+import PageBanner from "@/components/page-banner"
 import CompanyStory from "@/components/company-story"
 import VisionMission from "@/components/vision-mission"
 import TeamSection from "@/components/team-section"
 import AchievementsCounter from "@/components/achievements-counter"
+import connectDB from "@/lib/db"
+import SiteContent from "@/models/SiteContent"
 
 export const metadata = {
   title: "من نحن - صالح الازهري للمقاولات العامة والتشطيبات بالمدينة المنورة",
@@ -47,11 +49,24 @@ export const metadata = {
   },
 }
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  await connectDB()
+  const bannerDoc = await SiteContent.findOne({ key: 'banner_about' })
+
+  const banner = bannerDoc?.value || {}
+  const bannerImage = banner.image || '/1%20(11).png'
+  const bannerTitle = banner.title || 'من نحن'
+  const bannerSubtitle = banner.subtitle || 'شركه رائده في مجال المقاولات العامه والتشطيبات بالمدينه المنوره، نجمع بين الخبره العريقه والتقنيات الحديثه لتحقيق احلام عملائنا في البناء والتطوير'
+
   return (
     <main className="min-h-screen">
       <Header />
-      <AboutHero />
+      <PageBanner
+        image={bannerImage}
+        title={bannerTitle}
+        subtitle={bannerSubtitle}
+        fallbackImage="/1%20(11).png"
+      />
       <CompanyStory />
       <VisionMission />
       <TeamSection />

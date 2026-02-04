@@ -6,72 +6,24 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowLeft, Eye, MapPin } from "lucide-react"
 
-const projects = [
-  {
-    id: 1,
-    image: "/modern-villa-construction-project.png",
-    title: "فيلا سكنية فاخرة",
-    location: "المدينة المنورة",
-    category: "إنشائي",
-    description: "فيلا حديثة بتصميم عصري وتشطيبات فاخرة",
-    area: "500 م²",
-    year: "2023",
-  },
-  {
-    id: 2,
-    image: "/commercial-building-interior-design.png",
-    title: "مجمع تجاري",
-    location: "المدينة المنورة",
-    category: "ديكور",
-    description: "مجمع تجاري مصمم بعناية وديكوره فاخر",
-    area: "1000 م²",
-    year: "2022",
-  },
-  {
-    id: 3,
-    image: "/road-construction.png",
-    title: "مشروع طريق رئيسي",
-    location: "المدينة المنورة",
-    category: "طرق",
-    description: "طريق رئيسي معمق ومتخصص",
-    area: "2000 م²",
-    year: "2021",
-  },
-  {
-    id: 4,
-    image: "/office-renovation.png",
-    title: "ترميم مبنى إداري",
-    location: "المدينة المنورة",
-    category: "ترميم",
-    description: "مبنى إداري مترميم جيداً وحديثاً",
-    area: "800 م²",
-    year: "2020",
-  },
-  {
-    id: 5,
-    image: "/residential-compound-construction.png",
-    title: "مجمع سكني",
-    location: "المدينة المنورة",
-    category: "إنشائي",
-    description: "مجمع سكني معمق ومتخصص",
-    area: "1500 م²",
-    year: "2019",
-  },
-  {
-    id: 6,
-    image: "/luxury-hotel-interior-finishing.png",
-    title: "فندق فاخر",
-    location: "المدينة المنورة",
-    category: "تشطيب",
-    description: "فندق فاخر مترميم جيداً وحديثاً",
-    area: "3000 م²",
-    year: "2018",
-  },
-]
+interface Project {
+  _id: string
+  title: string
+  location: string
+  category: string
+  description: string
+  area: string
+  year: string
+  image: string
+}
 
-export default function ProjectsSection() {
+interface ProjectsSectionProps {
+  projects: Project[]
+}
+
+export default function ProjectsSection({ projects }: ProjectsSectionProps) {
   const [isVisible, setIsVisible] = useState(false)
-  const [expandedCard, setExpandedCard] = useState<number | null>(null)
+  const [expandedCard, setExpandedCard] = useState<string | null>(null)
   const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -85,23 +37,21 @@ export default function ProjectsSection() {
     return () => observer.disconnect()
   }, [])
 
-  const toggleCardExpansion = (projectId: number) => {
+  const toggleCardExpansion = (projectId: string) => {
     setExpandedCard(expandedCard === projectId ? null : projectId)
   }
 
   return (
     <section
       ref={sectionRef}
-      className={`py-20 bg-gray-50 transition-all duration-1000 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-      }`}
+      className={`py-20 bg-gray-50 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}
     >
       <div className="container mx-auto px-4">
         {/* عنوان القسم */}
         <div
-          className={`text-center mb-16 transition-all duration-1000 delay-300 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-          }`}
+          className={`text-center mb-16 transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+            }`}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-[#0D2240] mb-4">
             مشاريعنا بالمدينة المنورة
@@ -113,14 +63,13 @@ export default function ProjectsSection() {
 
         {/* شبكة المشاريع */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {projects.map((project, index) => (
+          {projects.slice(0, 6).map((project, index) => (
             <Card
-              key={project.id}
-              className={`overflow-hidden hover:shadow-xl transition-all duration-500 cursor-pointer group ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              } ${expandedCard === project.id ? "scale-105 shadow-2xl" : "hover:scale-105"}`}
+              key={project._id}
+              className={`overflow-hidden hover:shadow-xl transition-all duration-500 cursor-pointer group ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                } ${expandedCard === project._id ? "scale-105 shadow-2xl" : "hover:scale-105"}`}
               style={{ transitionDelay: `${index * 100 + 500}ms` }}
-              onClick={() => toggleCardExpansion(project.id)}
+              onClick={() => toggleCardExpansion(project._id)}
             >
               {/* صورة المشروع */}
               <div className="relative overflow-hidden">
@@ -149,9 +98,8 @@ export default function ProjectsSection() {
                 </div>
 
                 <div
-                  className={`overflow-hidden transition-all duration-500 ${
-                    expandedCard === project.id ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-                  }`}
+                  className={`overflow-hidden transition-all duration-500 ${expandedCard === project._id ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                    }`}
                 >
                   <div className="border-t border-gray-200 pt-4 mt-4">
                     <p className="text-sm text-[#2D3640] mb-3">{project.description}</p>
@@ -162,7 +110,7 @@ export default function ProjectsSection() {
                   </div>
                 </div>
 
-                <Link href="/projects" onClick={(e) => e.stopPropagation()}>
+                <Link href={`/projects/${project._id}`} onClick={(e) => e.stopPropagation()}>
                   <Button
                     variant="outline"
                     className="w-full border-[#0D2240] text-[#0D2240] hover:bg-[#0D2240] hover:text-white bg-transparent mt-4 group-hover:border-[#C4D600] group-hover:text-[#C4D600] transition-all duration-300"
@@ -178,9 +126,8 @@ export default function ProjectsSection() {
 
         {/* زر عرض جميع المشاريع */}
         <div
-          className={`text-center transition-all duration-1000 delay-1000 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-          }`}
+          className={`text-center transition-all duration-1000 delay-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+            }`}
         >
           <Link href="/projects">
             <Button
@@ -196,3 +143,4 @@ export default function ProjectsSection() {
     </section>
   )
 }
+

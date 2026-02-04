@@ -1,9 +1,12 @@
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import FloatingContact from "@/components/floating-contact"
-import ServicesHero from "@/components/services-hero"
+import PageBanner from "@/components/page-banner"
 import ServicesGrid from "@/components/services-grid"
 import ServicesCTA from "@/components/services-cta"
+import { getServices } from "@/actions/service-actions"
+import connectDB from "@/lib/db"
+import SiteContent from "@/models/SiteContent"
 
 export const metadata = {
   title: "خدمات المقاولات العامة والتشطيبات في المدينة المنورة | صالح الأزهري",
@@ -34,12 +37,31 @@ export const metadata = {
   },
 }
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  await connectDB()
+
+  const [services, bannerDoc] = await Promise.all([
+    getServices(),
+    SiteContent.findOne({ key: 'banner_services' })
+  ])
+
+  const banner = bannerDoc?.value || {}
+  const bannerImage = banner.image || '/aaa.png'
+  const bannerTitle = banner.title || 'خدماتنا بالمدينة المنورة'
+  const bannerSubtitle = banner.subtitle || 'نقدم مجموعة شاملة من الخدمات في مجال المقاولات والتشطيبات لتلبية جميع احتياجاتكم'
+
+  const plainServices = JSON.parse(JSON.stringify(services))
+
   return (
     <main className="min-h-screen">
       <Header />
-      <ServicesHero />
-      <ServicesGrid />
+      <PageBanner
+        image={bannerImage}
+        title={bannerTitle}
+        subtitle={bannerSubtitle}
+        fallbackImage="/aaa.png"
+      />
+      <ServicesGrid services={plainServices} />
       <ServicesCTA />
       <Footer />
       <FloatingContact />

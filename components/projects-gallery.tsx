@@ -6,101 +6,33 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowLeft, MapPin, Ruler, Eye, Filter } from "lucide-react"
 
-const projects = [
-  {
-    id: "luxury-villa-decoration",
-    title: "فيلا فاخرة - أعمال الديكور",
-    category: "decoration",
-    location: "المدينة المنورة",
-    area: "800 م²",
-    year: "2023",
-    image: "/a (4).png",
-    description: "تصميم وتنفيذ ديكورات داخلية وخارجية فاخرة لفيلا سكنية",
-  },
-  {
-    id: "commercial-building-construction",
-    title: "مبنى تجاري - أعمال إنشائية",
-    category: "construction",
-    location: "المدينة المنورة",
-    area: "2500 م²",
-    year: "2023",
-    image: "/a (5).png",
-    description: "تنفيذ أعمال إنشائية متكاملة لمبنى تجاري حديث",
-  },
-  {
-    id: "infrastructure-project",
-    title: "مشروع البنية التحتية",
-    category: "infrastructure",
-    location: "المدينة المنورة",
-    area: "5000 م²",
-    year: "2022",
-    image: "/a (6).png",
-    description: "تنفيذ شبكات المياه والصرف الصحي والكهرباء لمجمع سكني",
-  },
-  {
-    id: "electromechanical-hospital",
-    title: "مستشفى - أعمال كهروميكانيك",
-    category: "electromechanical",
-    location: "المدينة المنورة",
-    area: "3000 م²",
-    year: "2023",
-    image: "/a (7).png",
-    description: "تركيب وصيانة الأنظمة الكهربائية والميكانيكية لمستشفى حديث",
-  },
-  {
-    id: "ironworks-factory",
-    title: "مصنع - أعمال الحدادة",
-    category: "ironworks",
-    location: "المدينة المنورة",
-    area: "4000 م²",
-    year: "2022",
-    image: "/a (8).png",
-    description: "تصنيع وتركيب الهياكل المعدنية لمصنع صناعي",
-  },
-  {
-    id: "road-construction",
-    title: "طريق رئيسي - أعمال الطرق",
-    category: "roads",
-    location: "المدينة المنورة",
-    area: "10 كم",
-    year: "2021",
-    image: "/a (1).png",
-    description: "إنشاء وتطوير طريق رئيسي بأحدث معايير السلامة",
-  },
-  {
-    id: "heritage-building-renovation",
-    title: "مبنى تراثي - ترميم وتشطيب",
-    category: "renovation",
-    location: "المدينة المنورة",
-    area: "1200 م²",
-    year: "2022",
-    image: "/a (2).png",
-    description: "ترميم وتجديد مبنى تراثي مع الحفاظ على الطابع الأصيل",
-  },
-  {
-    id: "mall-decoration",
-    title: "مول تجاري - أعمال الديكور",
-    category: "decoration",
-    location: "المدينة المنورة",
-    area: "6000 م²",
-    year: "2023",
-    image: "/a (3).png",
-    description: "تصميم وتنفيذ ديكورات عصرية لمول تجاري كبير",
-  },
-]
+interface Project {
+  _id: string
+  title: string
+  location: string
+  category: string
+  description: string
+  area: string
+  year: string
+  image: string
+}
+
+interface ProjectsGalleryProps {
+  projects: Project[]
+}
 
 const categories = [
   { id: "all", name: "جميع المشاريع" },
-  { id: "decoration", name: "الديكور" },
-  { id: "construction", name: "الإنشائية" },
-  { id: "infrastructure", name: "البنية التحتية" },
-  { id: "electromechanical", name: "الكهروميكانيك" },
-  { id: "ironworks", name: "الحدادة" },
-  { id: "roads", name: "الطرق" },
-  { id: "renovation", name: "الترميم والتشطيب" },
+  { id: "ديكور", name: "الديكور" },
+  { id: "إنشائي", name: "الإنشائية" },
+  { id: "بنية تحتية", name: "البنية التحتية" },
+  { id: "كهروميكانيك", name: "الكهروميكانيك" },
+  { id: "حدادة", name: "الحدادة" },
+  { id: "طرق", name: "الطرق" },
+  { id: "ترميم", name: "الترميم والتشطيب" },
 ]
 
-export default function ProjectsGallery() {
+export default function ProjectsGallery({ projects }: ProjectsGalleryProps) {
   const [activeCategory, setActiveCategory] = useState("all")
   const [isVisible, setIsVisible] = useState(false)
   const [hoveredProject, setHoveredProject] = useState<string | null>(null)
@@ -129,15 +61,13 @@ export default function ProjectsGallery() {
   return (
     <section
       ref={sectionRef}
-      className={`py-20 transition-all duration-1000 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-      }`}
+      className={`py-20 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        }`}
     >
       <div className="container mx-auto px-4">
         <div
-          className={`text-center mb-16 transition-all duration-1000 delay-300 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-          }`}
+          className={`text-center mb-16 transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+            }`}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-[#0D2240] mb-4">مشاريعنا المميزة</h2>
           <p className="text-lg text-[#2D3640] max-w-2xl mx-auto">
@@ -146,9 +76,8 @@ export default function ProjectsGallery() {
         </div>
 
         <div
-          className={`flex flex-wrap justify-center gap-4 mb-12 transition-all duration-1000 delay-500 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-          }`}
+          className={`flex flex-wrap justify-center gap-4 mb-12 transition-all duration-1000 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+            }`}
         >
           <div className="flex items-center gap-2 mb-4 w-full justify-center">
             <Filter className="w-5 h-5 text-[#0D2240]" />
@@ -159,11 +88,10 @@ export default function ProjectsGallery() {
               key={category.id}
               variant={activeCategory === category.id ? "default" : "outline"}
               onClick={() => setActiveCategory(category.id)}
-              className={`px-6 py-2 transition-all duration-300 hover:scale-105 ${
-                activeCategory === category.id
+              className={`px-6 py-2 transition-all duration-300 hover:scale-105 ${activeCategory === category.id
                   ? "bg-[#C4D600] text-[#0D2240] hover:bg-[#C4D600]/90 shadow-lg"
                   : "border-[#0D2240] text-[#0D2240] hover:bg-[#0D2240] hover:text-white"
-              }`}
+                }`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {category.name}
@@ -174,12 +102,11 @@ export default function ProjectsGallery() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project, index) => (
             <Card
-              key={project.id}
-              className={`overflow-hidden hover:shadow-2xl transition-all duration-500 group cursor-pointer ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              } ${hoveredProject === project.id ? "scale-105 shadow-2xl" : "hover:scale-105"}`}
+              key={project._id}
+              className={`overflow-hidden hover:shadow-2xl transition-all duration-500 group cursor-pointer ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                } ${hoveredProject === project._id ? "scale-105 shadow-2xl" : "hover:scale-105"}`}
               style={{ transitionDelay: `${index * 100 + 700}ms` }}
-              onMouseEnter={() => setHoveredProject(project.id)}
+              onMouseEnter={() => setHoveredProject(project._id)}
               onMouseLeave={() => setHoveredProject(null)}
             >
               <div className="relative overflow-hidden">
@@ -221,7 +148,7 @@ export default function ProjectsGallery() {
                   </div>
                 </div>
 
-                <Link href={`/projects/${project.id}`}>
+                <Link href={`/projects/${project._id}`}>
                   <Button className="w-full bg-[#0D2240] hover:bg-[#C4D600] hover:text-[#0D2240] text-white transition-all duration-300 group-hover:shadow-lg transform group-hover:-translate-y-1">
                     تفاصيل المشروع
                     <ArrowLeft className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
@@ -230,8 +157,14 @@ export default function ProjectsGallery() {
               </div>
             </Card>
           ))}
+          {filteredProjects.length === 0 && (
+            <div className="col-span-full text-center py-12 text-gray-500">
+              لا توجد مشاريع في هذا القسم.
+            </div>
+          )}
         </div>
       </div>
     </section>
   )
 }
+

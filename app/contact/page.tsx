@@ -1,10 +1,12 @@
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import FloatingContact from "@/components/floating-contact"
-import ContactHero from "@/components/contact-hero"
+import PageBanner from "@/components/page-banner"
 import ContactForm from "@/components/contact-form"
 import ContactInfo from "@/components/contact-info"
 import ContactMap from "@/components/contact-map"
+import connectDB from "@/lib/db"
+import SiteContent from "@/models/SiteContent"
 
 export const metadata = {
   title: "تواصل معنا - صالح الازهري للمقاولات العامة والتشطيبات بالمدينة المنورة",
@@ -44,11 +46,24 @@ export const metadata = {
   },
 }
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  await connectDB()
+  const bannerDoc = await SiteContent.findOne({ key: 'banner_contact' })
+
+  const banner = bannerDoc?.value || {}
+  const bannerImage = banner.image || '/mm.png'
+  const bannerTitle = banner.title || 'تواصل معنا بالمدينة المنورة'
+  const bannerSubtitle = banner.subtitle || 'نحن هنا بالمدينة المنورة لمساعدتك في تحقيق مشروع أحلامك. تواصل معنا الآن للحصول على استشارة مجانية'
+
   return (
     <main className="min-h-screen">
       <Header />
-      <ContactHero />
+      <PageBanner
+        image={bannerImage}
+        title={bannerTitle}
+        subtitle={bannerSubtitle}
+        fallbackImage="/mm.png"
+      />
       <div className="grid lg:grid-cols-2 gap-0">
         <ContactForm />
         <ContactInfo />

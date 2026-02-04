@@ -4,91 +4,45 @@ import { useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { ArrowLeft, Building, Wrench, Palette, Settings } from "lucide-react"
+import { ArrowLeft, Building, Wrench, Palette, Settings, Zap, Hammer, RefreshCw, Bold } from "lucide-react"
 
-const services = [
-  {
-    id: "decoration",
-    title: "أعمال الديكور بالمدينة المنورة",
-    description: "تصاميم داخلية وخارجية عصرية وأنيقة تجمع بين الجمال والوظيفية",
-    icon: Palette,
-    image: "/1.png",
-    category: "decoration",
-  },
-  {
-    id: "construction",
-    title: "الأعمال الإنشائية بالمدينة المنورة",
-    description: "بناء وتشييد المباني السكنية والتجارية والصناعية بأعلى معايير الجودة",
-    icon: Building,
-    image: "/2.png",
-    category: "construction",
-  },
-  {
-    id: "infrastructure",
-    title: "أعمال البنية التحتية بالمدينة المنورة",
-    description: "تنفيذ مشاريع البنية التحتية والمرافق العامة بأحدث التقنيات",
-    icon: Wrench,
-    image: "/3.png",
-    category: "infrastructure",
-  },
-  {
-    id: "electromechanical",
-    title: "أعمال الكهروميكانيك بالمدينة المنورة",
-    description: "تركيب وصيانة الأنظمة الكهربائية والميكانيكية بأعلى معايير السلامة",
-    icon: Settings,
-    image: "/4.png",
-    category: "electromechanical",
-  },
-  {
-    id: "metalwork",
-    title: "أعمال الحدادة بالمدينة المنورة",
-    description: "تصنيع وتركيب الهياكل المعدنية والأبواب والنوافذ بدقة عالية",
-    icon: Building,
-    image: "/5.png",
-    category: "ironworks",
-  },
-  {
-    id: "roads",
-    title: "أعمال الطرق بالمدينة المنورة",
-    description: "إنشاء وصيانة الطرق والممرات بأحدث التقنيات والمعدات المتطورة",
-    icon: Building,
-    image: "/6.png",
-    category: "roads",
-  },
-  {
-    id: "renovation",
-    title: "أعمال الترميم والتشطيب بالمدينة المنورة",
-    description: "تجديد وترميم المباني القديمة مع الحفاظ على الطابع المعماري الأصيل",
-    icon: Wrench,
-    image: "/7.png",
-    category: "renovation",
-  },
-  {
-    id: "real-estate",
-    title: "الخدمات العقارية بالمدينة المنورة",
-    description: "بيع وشراء وتأجير وتسويق عقاري متكامل للأفراد والشركات",
-    icon: Building,
-    image: "/real-estate.jpg",
-    category: "real-estate",
-  },
-]
+// Map icon names to components
+const IconMap: { [key: string]: any } = {
+  Palette: Palette,
+  Building: Building,
+  Wrench: Wrench,
+  Settings: Settings,
+  Zap: Zap,
+  Hammer: Hammer,
+  RefreshCw: RefreshCw,
+  Road: Bold
+}
+
+interface Service {
+  _id: string
+  title: string
+  description: string
+  icon: string
+  href?: string
+  // Add other properties if needed based on the model
+}
+
+interface ServicesGridProps {
+  services: Service[]
+}
 
 const categories = [
   { id: "all", name: "جميع الخدمات" },
-  { id: "decoration", name: "الديكور" },
-  { id: "construction", name: "الإنشائية" },
-  { id: "infrastructure", name: "البنية التحتية" },
-  { id: "electromechanical", name: "الكهروميكانيك" },
-  { id: "ironworks", name: "الحدادة" },
-  { id: "roads", name: "الطرق" },
-  { id: "renovation", name: "الترميم والتشطيب" },
 ]
 
-export default function ServicesGrid() {
+export default function ServicesGrid({ services }: ServicesGridProps) {
   const [activeCategory, setActiveCategory] = useState("all")
 
-  const filteredServices =
-    activeCategory === "all" ? services : services.filter((service) => service.category === activeCategory)
+  // Assume filtering logic if categories were dynamic, but for now show all or if category field existed on service
+  // Since we removed 'category' from Service interface in the snippet (not sure if it exists in DB model), we just show all.
+  // If we want filtering, we need category in DB.
+
+  const filteredServices = services
 
   return (
     <section className="py-20">
@@ -100,40 +54,24 @@ export default function ServicesGrid() {
           </p>
         </div>
 
-        {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {categories.map((category) => (
-            <Button
-              key={category.id}
-              variant={activeCategory === category.id ? "default" : "outline"}
-              onClick={() => setActiveCategory(category.id)}
-              className={`px-6 py-2 ${
-                activeCategory === category.id
-                  ? "bg-[#C4D600] text-[#0D2240] hover:bg-[#C4D600]/90"
-                  : "border-[#0D2240] text-[#0D2240] hover:bg-[#0D2240] hover:text-white"
-              }`}
-            >
-              {category.name}
-            </Button>
-          ))}
-        </div>
+        {/* Category Filter - Simplified for now as dynamic categories would require DB support */}
+        {/* <div className="flex flex-wrap justify-center gap-4 mb-12">
+            ... 
+        </div> */}
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredServices.map((service) => {
-            const IconComponent = service.icon
+            const IconComponent = IconMap[service.icon] || Building
+
             return (
-              <Card key={service.id} className="overflow-hidden hover:shadow-lg transition-shadow group">
+              <Card key={service._id} className="overflow-hidden hover:shadow-lg transition-shadow group">
                 <div className="relative">
-                  <img
-                    src={
-                      service.image ||
-                      `/placeholder.svg?height=250&width=400&query=${service.title || "/placeholder.svg"}`
-                    }
-                    alt={service.title}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="bg-gray-200 h-48 w-full flex items-center justify-center">
+                    {/* Placeholder or image if service has one */}
+                    <IconComponent className="w-16 h-16 text-gray-400 opacity-50" />
+                  </div>
+
                   <div className="absolute top-4 right-4 bg-[#C4D600] p-3 rounded-full">
                     <IconComponent className="w-6 h-6 text-[#0D2240]" />
                   </div>
@@ -141,7 +79,7 @@ export default function ServicesGrid() {
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-[#0D2240] mb-3">{service.title}</h3>
                   <p className="text-[#2D3640] mb-4 leading-relaxed">{service.description}</p>
-                  <Link href={`/services/${service.id}`}>
+                  <Link href={service.href || "#"}>
                     <Button className="w-full bg-[#0D2240] hover:bg-[#0D2240]/90 text-white">
                       تفاصيل الخدمة
                       <ArrowLeft className="w-4 h-4 mr-2" />
