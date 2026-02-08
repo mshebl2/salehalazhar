@@ -33,13 +33,6 @@
     <priority>0.6</priority>
   </url>
 
-  <!-- المدونة -->
-  <url>
-    <loc>https://www.salehalazhari.com/blog</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
   <!-- صفحات الخدمات -->
   <url>
     <loc>https://www.salehalazhari.com/services/decoration</loc>
@@ -87,6 +80,20 @@
     <loc>https://www.salehalazhari.com/services/real-estate</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+
+  <!-- المدونة -->
+  <url>
+    <loc>https://www.salehalazhari.com/blog</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- رابط المقال الفردي -->
+  <url>
+    <loc>https://www.salehalazhari.com/blog/%D8%B4%D8%B1%D9%83%D8%A9%20%D9%85%D9%82%D8%A7%D9%88%D9%84%D8%A7%D8%AA%20%D8%B9%D8%A7%D9%85%D8%A9%20%D8%A8%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D8%A7%D9%84%D9%85%D9%86%D9%88%D8%B1%D8%A9</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
 
 </urlset>
