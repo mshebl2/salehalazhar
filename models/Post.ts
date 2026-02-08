@@ -10,6 +10,25 @@ export interface IPost extends Document {
     publishedAt?: Date
     author?: string
     tags: string[]
+    // SEO fields
+    autoSEO?: boolean
+    autoInternalLinks?: boolean
+    metaTitle?: string
+    metaDescription?: string
+    metaKeywords?: string[]
+    manualSEO?: {
+        title?: string
+        description?: string
+        keywords?: string[]
+        ogImage?: string
+        canonicalUrl?: string
+        noIndex?: boolean
+        noFollow?: boolean
+    }
+    // Internal linking fields
+    manualLinks?: any[]
+    processedContent?: string
+    internalLinksApplied?: string[]
     createdAt: Date
     updatedAt: Date
 }
@@ -25,6 +44,25 @@ const PostSchema = new Schema<IPost>(
         publishedAt: Date,
         author: String,
         tags: [String],
+        // SEO fields
+        autoSEO: { type: Boolean, default: true },
+        autoInternalLinks: { type: Boolean, default: true },
+        metaTitle: String,
+        metaDescription: String,
+        metaKeywords: [String],
+        manualSEO: {
+            title: String,
+            description: String,
+            keywords: [String],
+            ogImage: String,
+            canonicalUrl: String,
+            noIndex: Boolean,
+            noFollow: Boolean,
+        },
+        // Internal linking fields
+        manualLinks: { type: Array },
+        processedContent: { type: String },
+        internalLinksApplied: { type: [String], default: [] },
     },
     {
         timestamps: true,

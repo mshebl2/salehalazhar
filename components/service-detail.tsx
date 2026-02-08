@@ -4,9 +4,10 @@ type ServiceDetailProps = {
   service: {
     title: string
     description: string
-    image: string
-    features: string[]
-    process: string[]
+    details: string
+    href: string
+    icon: string
+    order: number
   }
 }
 
@@ -26,43 +27,24 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
               </p>
             </div>
             <div className="relative w-full h-80">
-              <Image
-                src={service.image}
-                alt={service.title}
-                fill
-                className="object-cover rounded-2xl shadow-lg"
-              />
+              <div className="w-full h-full bg-gray-200 rounded-2xl shadow-lg flex items-center justify-center">
+                <span className="text-gray-500">صورة الخدمة</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features */}
+      {/* Details */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8">مميزات الخدمة</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {service.features.map((feature, idx) => (
-              <div key={idx} className="p-6 bg-white rounded-2xl shadow">
-                <h3 className="font-semibold text-lg">{feature}</h3>
+          <h2 className="text-3xl font-bold mb-8">تفاصيل الخدمة</h2>
+          <div className="prose prose-lg max-w-none">
+            <div className="p-8 bg-white rounded-2xl shadow">
+              <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
+                {service.details}
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Process */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8">خطوات التنفيذ</h2>
-          <div className="space-y-4">
-            {service.process.map((step, idx) => (
-              <div key={idx} className="p-6 bg-white rounded-2xl shadow">
-                <h3 className="font-semibold text-lg">
-                  خطوة {idx + 1}: {step}
-                </h3>
-              </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
