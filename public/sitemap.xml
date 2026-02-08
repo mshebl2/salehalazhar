@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- الصفحات الرئيسية -->
+  <!-- الصفحة الرئيسية -->
   <url>
     <loc>https://www.salehalazhari.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
+  <!-- الصفحات التعريفية -->
   <url>
     <loc>https://www.salehalazhari.com/about</loc>
     <changefreq>monthly</changefreq>
@@ -27,18 +28,12 @@
   </url>
 
   <url>
-    <loc>https://www.salehalazhari.com/blog</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
     <loc>https://www.salehalazhari.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
-  <!-- صفحات الخدمات الداخلية -->
+  <!-- صفحات الخدمات -->
   <url>
     <loc>https://www.salehalazhari.com/services/decoration</loc>
     <changefreq>monthly</changefreq>
@@ -87,11 +82,23 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- صفحة المقال الجديد -->
+  <!-- المدونة -->
   <url>
-    <loc>https://www.salehalazhari.com/blog/%D8%B4%D8%B1%D9%83%D8%A9-%D9%85%D9%82%D8%A7%D9%88%D9%84%D8%A7%D8%AA-%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9-%D8%A7%D9%84%D9%85%D9%86%D9%88%D8%B1%D8%A9</loc>
-    <changefreq>monthly</changefreq>
+    <loc>https://www.salehalazhari.com/blog</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- رابط المقال الفردي -->
+  <url>
+    <loc>https://www.salehalazhari.com/blog/%D8%B4%D8%B1%D9%83%D8%A9%20%D9%85%D9%82%D8%A7%D9%88%D9%84%D8%A7%D8%AA%20%D8%B9%D8%A7%D9%85%D8%A9%20%D8%A8%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D8%A7%D9%84%D9%85%D9%86%D9%88%D8%B1%D8%A9</loc>
+    <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+  <loc>https://www.salehalazhari.com/blog/%D8%B4%D8%B1%D9%83%D8%A9%20%D8%AF%D9%8A%D9%83%D9%88%D8%B1%20%D8%A8%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D8%A7%D9%84%D9%85%D9%86%D9%88%D8%B1%D8%A9</loc>
+  <changefreq>weekly</changefreq>
+  <priority>0.7</priority>
+</url>
 
 </urlset>
