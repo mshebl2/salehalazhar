@@ -13,8 +13,26 @@ export async function createProject(formData: FormData) {
     const category = formData.get("category")
     const description = formData.get("description")
     const area = formData.get("area")
+    const duration = formData.get("duration")
     const year = formData.get("year")
     const image = formData.get("image")
+    const href = formData.get("href")
+
+    // Extract arrays from form data
+    const services: string[] = []
+    const features: string[] = []
+    const images: string[] = []
+
+    // Get all services from form data
+    for (let [key, value] of formData.entries()) {
+        if (key.startsWith('services[')) {
+            services.push(value as string)
+        } else if (key.startsWith('features[')) {
+            features.push(value as string)
+        } else if (key.startsWith('images[')) {
+            images.push(value as string)
+        }
+    }
 
     if (!title || !category) {
         return { error: "Title and Category are required" }
@@ -22,13 +40,18 @@ export async function createProject(formData: FormData) {
 
     try {
         await Project.create({
-            title,
-            location,
-            category,
-            description,
-            area,
-            year,
-            image
+            title: title as string,
+            location: location as string,
+            category: category as string,
+            description: description as string,
+            area: area as string,
+            duration: duration as string,
+            year: year as string,
+            image: image as string,
+            href: href as string,
+            services: services.length > 0 ? services : [],
+            features: features.length > 0 ? features : [],
+            images: images.length > 0 ? images : []
         })
 
         revalidatePath("/admin/projects")
@@ -50,18 +73,41 @@ export async function updateProject(id: string, formData: FormData) {
     const category = formData.get("category")
     const description = formData.get("description")
     const area = formData.get("area")
+    const duration = formData.get("duration")
     const year = formData.get("year")
     const image = formData.get("image")
+    const href = formData.get("href")
+
+    // Extract arrays from form data
+    const services: string[] = []
+    const features: string[] = []
+    const images: string[] = []
+
+    // Get all services from form data
+    for (let [key, value] of formData.entries()) {
+        if (key.startsWith('services[')) {
+            services.push(value as string)
+        } else if (key.startsWith('features[')) {
+            features.push(value as string)
+        } else if (key.startsWith('images[')) {
+            images.push(value as string)
+        }
+    }
 
     try {
         await Project.findByIdAndUpdate(id, {
-            title,
-            location,
-            category,
-            description,
-            area,
-            year,
-            image,
+            title: title as string,
+            location: location as string,
+            category: category as string,
+            description: description as string,
+            area: area as string,
+            duration: duration as string,
+            year: year as string,
+            image: image as string,
+            href: href as string,
+            services: services.length > 0 ? services : [],
+            features: features.length > 0 ? features : [],
+            images: images.length > 0 ? images : [],
             updatedAt: new Date()
         })
 
