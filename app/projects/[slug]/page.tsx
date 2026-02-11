@@ -11,7 +11,7 @@ export async function generateStaticParams() {
   await connectDB()
   const projects = await Project.find({}).select('href')
   return projects.map((project) => ({
-    slug: project.href.replace('/projects/', ''),
+    slug: project.href ? project.href.replace('/projects/', '') : 'default',
   }))
 }
 
