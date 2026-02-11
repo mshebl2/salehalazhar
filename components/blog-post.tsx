@@ -6,15 +6,13 @@ import { ArrowLeft, Calendar, Clock, User, Share2 } from "lucide-react"
 interface BlogPostProps {
   post: {
     title: string
-    excerpt: string
-    content: string
+    excerpt?: string
+    content?: string
     author: string
-    authorRole: string
-    publishDate: string
-    readTime: string
-    category: string
-    image: string
+    publishedDate: string
+    image?: string
     tags: string[]
+    internalLinksApplied?: string[]
   }
 }
 
@@ -27,7 +25,7 @@ export default function BlogPost({ post }: BlogPostProps) {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-white text-center">
             <div className="bg-[#C4D600] text-[#0D2240] px-4 py-2 rounded-full text-sm font-medium inline-block mb-4">
-              {post.category}
+              مقال
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">{post.title}</h1>
             <p className="text-xl md:text-2xl leading-relaxed text-balance opacity-90 mb-8">{post.excerpt}</p>
@@ -39,11 +37,11 @@ export default function BlogPost({ post }: BlogPostProps) {
               </div>
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
-                <span>{new Date(post.publishDate).toLocaleDateString("ar-SA")}</span>
+                <span>{new Date(post.publishedDate).toLocaleDateString("ar-SA")}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4" />
-                <span>{post.readTime}</span>
+                <span>5 دقائق قراءة</span>
               </div>
             </div>
           </div>
@@ -69,10 +67,27 @@ export default function BlogPost({ post }: BlogPostProps) {
                   />
                 </div>
 
+                {/* Internal Links Applied */}
+                {post.internalLinksApplied && post.internalLinksApplied.length > 0 && (
+                  <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 className="text-sm font-semibold text-blue-800 mb-2">روابط داخلية تمت إضافتها:</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {post.internalLinksApplied.map((link, index) => (
+                        <span
+                          key={index}
+                          className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"
+                        >
+                          {link}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Article Body */}
                 <div
                   className="prose prose-lg max-w-none text-[#2D3640] leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: post.content }}
+                  dangerouslySetInnerHTML={{ __html: post.content || '' }}
                 />
 
                 {/* Tags */}
@@ -111,8 +126,8 @@ export default function BlogPost({ post }: BlogPostProps) {
                       <User className="w-8 h-8 text-[#0D2240]" />
                     </div>
                     <h3 className="text-lg font-bold text-[#0D2240] mb-1">{post.author}</h3>
-                    <p className="text-[#2D3640] text-sm mb-4">{post.authorRole}</p>
-                    <p className="text-xs text-[#2D3640]">خبير في مجال البناء والتشطيب مع سنوات من الخبرة العملية</p>
+                    <p className="text-[#2D3640] text-sm mb-4">خبير في مجال البناء والتشطيب مع سنوات من الخبرة العملية</p>
+                    <p className="text-xs text-[#2D3640]">متخصص في تقديم الحلول المبتكرة للمشاريع الإنشائية</p>
                   </div>
                 </Card>
 

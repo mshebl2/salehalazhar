@@ -4,9 +4,10 @@ export interface IInternalLinkMapping {
     keyword: string
     url: string
     priority: number
+    caseSensitive: boolean
+    maxOccurrences: number
     isActive: boolean
-    maxUsage?: number
-    currentUsage?: number
+    flexibleMatch?: boolean
     createdAt: Date
     updatedAt: Date
 }
@@ -16,9 +17,10 @@ const InternalLinkMappingSchema = new Schema<IInternalLinkMapping>(
         keyword: { type: String, required: true },
         url: { type: String, required: true },
         priority: { type: Number, default: 1 },
+        caseSensitive: { type: Boolean, default: false },
+        maxOccurrences: { type: Number, default: 3 },
         isActive: { type: Boolean, default: true },
-        maxUsage: { type: Number },
-        currentUsage: { type: Number, default: 0 },
+        flexibleMatch: { type: Boolean, default: true },
     },
     {
         timestamps: true,

@@ -25,12 +25,16 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     return { title: "المقال غير موجود" }
   }
 
+  const metaTitle = post.metaTitle || `${post.title} - مدونة صالح الأزهري للمقاولات`
+  const metaDescription = post.metaDescription || post.excerpt
+
   return {
-    title: `${post.title} - مدونة صالح الأزهري للمقاولات`,
-    description: post.excerpt,
+    title: metaTitle,
+    description: metaDescription,
+    keywords: post.metaKeywords?.join(', ') || '',
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
+      title: metaTitle,
+      description: metaDescription,
       url: `https://www.salehalazhari.com/blog/${post.slug}`,
       images: post.featuredImage
         ? [`https://www.salehalazhari.com${post.featuredImage}`]
@@ -39,8 +43,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     },
     twitter: {
       card: "summary_large_image",
-      title: post.title,
-      description: post.excerpt,
+      title: metaTitle,
+      description: metaDescription,
       images: post.featuredImage
         ? [`https://www.salehalazhari.com${post.featuredImage}`]
         : [`https://www.salehalazhari.com/aaa.png`],
@@ -87,11 +91,12 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   const postData = {
     title: post.title,
     excerpt: post.excerpt,
-    content: post.content,
+    content: post.processedContent || post.content, // Use processed content if available
     image: post.featuredImage,
     publishedDate: publishedDate,
-    author: "مؤسسة صالح الأزهري",
+    author: post.author || "مؤسسة صالح الأزهري",
     tags: post.tags || [],
+    internalLinksApplied: post.internalLinksApplied || [],
   }
 
   return (
@@ -122,7 +127,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
       <Header />
 
-      <div className="text-black [&_a]:text-blue-700 [&_a]:hover:text-blue-500">
+      <div className="text-black [&_a]:text-blue-700 [&_a]:hover:text-blue-500 [&_.internal-link]:text-[#0D2240] [&_.internal-link]:font-semibold [&_.internal-link]:no-underline hover:[&_.internal-link]:underline">
         <BlogPost post={postData} />
       </div>
 
