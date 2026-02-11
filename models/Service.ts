@@ -7,6 +7,8 @@ export interface IService extends Document {
     href: string
     icon: string
     order: number
+    features: string[]
+    benefits: string[]
     createdAt: Date
     updatedAt: Date
 }
@@ -19,6 +21,8 @@ const ServiceSchema = new Schema<IService>(
         href: { type: String, required: true },
         icon: { type: String, required: true },
         order: { type: Number, default: 0 },
+        features: [{ type: String, required: true }],
+        benefits: [{ type: String, required: true }],
     },
     { timestamps: true }
 )

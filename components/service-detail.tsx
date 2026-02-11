@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import Link from "next/link"
+import { CheckCircle, Star, ArrowRight } from "lucide-react"
 
 type ServiceDetailProps = {
   service: {
@@ -10,6 +11,8 @@ type ServiceDetailProps = {
     href: string
     icon: string
     order: number
+    features?: string[]
+    benefits?: string[]
   }
 }
 
@@ -72,8 +75,56 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
         </div>
       </section>
 
+      {/* Features Section */}
+      {service.features && service.features.length > 0 && (
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl lg:text-4xl font-bold text-[#0D2240] mb-4">مميزات الخدمة</h2>
+                <div className="w-24 h-1 bg-[#C4D600] mx-auto rounded-full"></div>
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                {service.features.map((feature, index) => (
+                  <div key={index} className="flex items-start gap-4 p-6 bg-gray-50 rounded-xl">
+                    <div className="bg-[#C4D600] p-2 rounded-full flex-shrink-0">
+                      <CheckCircle className="w-5 h-5 text-[#0D2240]" />
+                    </div>
+                    <p className="text-gray-700 leading-relaxed">{feature}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Benefits Section */}
+      {service.benefits && service.benefits.length > 0 && (
+        <section className="py-20 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl lg:text-4xl font-bold text-[#0D2240] mb-4">فوائد الخدمة</h2>
+                <div className="w-24 h-1 bg-[#C4D600] mx-auto rounded-full"></div>
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                {service.benefits.map((benefit, index) => (
+                  <div key={index} className="flex items-start gap-4 p-6 bg-white rounded-xl shadow-sm">
+                    <div className="bg-[#0D2240] p-2 rounded-full flex-shrink-0">
+                      <Star className="w-5 h-5 text-[#C4D600]" />
+                    </div>
+                    <p className="text-gray-700 leading-relaxed">{benefit}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Details */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
@@ -81,7 +132,7 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
               <div className="w-24 h-1 bg-[#C4D600] mx-auto rounded-full"></div>
             </div>
             <div className="prose prose-lg max-w-none">
-              <div className="p-8 lg:p-12 bg-white rounded-3xl shadow-xl">
+              <div className="p-8 lg:p-12 bg-gray-50 rounded-3xl shadow-xl">
                 <div className="whitespace-pre-wrap text-gray-700 leading-relaxed text-lg">
                   {service.details}
                 </div>
@@ -106,6 +157,22 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
             </Link>
             <Link href="tel:+966505123456" className="inline-flex items-center justify-center rounded-lg border-2 border-white px-8 py-4 text-white font-bold text-lg hover:bg-white hover:text-[#0D2240] transition-colors">
               اتصل الآن
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Related Services */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-[#0D2240] mb-4">خدمات أخرى</h2>
+            <div className="w-24 h-1 bg-[#C4D600] mx-auto rounded-full"></div>
+          </div>
+          <div className="text-center">
+            <Link href="/services" className="inline-flex items-center justify-center rounded-lg border border-[#0D2240] px-8 py-4 text-[#0D2240] font-bold text-lg hover:bg-[#0D2240] hover:text-white transition-colors">
+              استكشف جميع الخدمات
+              <ArrowRight className="w-5 h-5 mr-2" />
             </Link>
           </div>
         </div>

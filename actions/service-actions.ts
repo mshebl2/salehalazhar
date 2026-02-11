@@ -15,18 +15,33 @@ export async function createService(formData: FormData) {
     const icon = formData.get("icon")
     const order = formData.get("order")
 
+    // Extract arrays from form data
+    const features: string[] = []
+    const benefits: string[] = []
+
+    // Get all features and benefits from form data
+    for (let [key, value] of formData.entries()) {
+        if (key.startsWith('features[')) {
+            features.push(value as string)
+        } else if (key.startsWith('benefits[')) {
+            benefits.push(value as string)
+        }
+    }
+
     if (!title) {
         return { error: "Title is required" }
     }
 
     try {
         await Service.create({
-            title,
-            description,
-            details,
-            href,
-            icon,
-            order: order ? parseInt(order.toString()) : 0
+            title: title as string,
+            description: description as string,
+            details: details as string,
+            href: href as string,
+            icon: icon as string,
+            order: order ? parseInt(order.toString()) : 0,
+            features: features.length > 0 ? features : [],
+            benefits: benefits.length > 0 ? benefits : []
         })
 
         revalidatePath("/admin/services")
@@ -50,14 +65,29 @@ export async function updateService(id: string, formData: FormData) {
     const icon = formData.get("icon")
     const order = formData.get("order")
 
+    // Extract arrays from form data
+    const features: string[] = []
+    const benefits: string[] = []
+
+    // Get all features and benefits from form data
+    for (let [key, value] of formData.entries()) {
+        if (key.startsWith('features[')) {
+            features.push(value as string)
+        } else if (key.startsWith('benefits[')) {
+            benefits.push(value as string)
+        }
+    }
+
     try {
         await Service.findByIdAndUpdate(id, {
-            title,
-            description,
-            details,
-            href,
-            icon,
+            title: title as string,
+            description: description as string,
+            details: details as string,
+            href: href as string,
+            icon: icon as string,
             order: order ? parseInt(order.toString()) : 0,
+            features: features.length > 0 ? features : [],
+            benefits: benefits.length > 0 ? benefits : [],
             updatedAt: new Date()
         })
 
