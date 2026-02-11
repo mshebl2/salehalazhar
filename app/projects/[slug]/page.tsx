@@ -9,15 +9,26 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 
 export async function generateStaticParams() {
   await connectDB()
-  const projects = await Project.find({}).select('href')
-  return projects.map((project) => ({
-    slug: project.href ? project.href.replace('/projects/', '') : 'default',
-  }))
+  const projects = await Project.find({}).select('href _id')
+  return projects.map((project) => {
+    // Use href if available, otherwise use _id
+    const slug = project.href 
+      ? project.href.replace('/projects/', '')
+      : project._id.toString()
+    return { slug }
+  })
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   await connectDB()
-  const project = await Project.findOne({ href: `/projects/${params.slug}` })
+  
+  // Try to find by href first, then by _id
+  let project = await Project.findOne({ href: `/projects/${params.slug}` })
+  
+  if (!project) {
+    // If not found by href, try by _id
+    project = await Project.findById(params.slug)
+  }
 
   if (!project) {
     return {
@@ -33,7 +44,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export default async function ProjectDetailPage({ params }: { params: { slug: string } }) {
   await connectDB()
-  const project = await Project.findOne({ href: `/projects/${params.slug}` })
+  
+  // Try to find by href first, then by _id
+  let project = await Project.findOne({ href: `/projects/${params.slug}` })
+  
+  if (!project) {
+    // If not found by href, try by _id
+    project = await Project.findById(params.slug)
+  }
 
   if (!project) {
     notFound()

@@ -15,6 +15,7 @@ interface Project {
   area: string
   year: string
   image: string
+  href?: string
 }
 
 interface ProjectsGalleryProps {
@@ -148,7 +149,7 @@ export default function ProjectsGallery({ projects }: ProjectsGalleryProps) {
                   </div>
                 </div>
 
-                <Link href={`/projects/${project._id}`}>
+                <Link href={project.href || `/projects/${project._id}`}>
                   <Button className="w-full bg-[#0D2240] hover:bg-[#C4D600] hover:text-[#0D2240] text-white transition-all duration-300 group-hover:shadow-lg transform group-hover:-translate-y-1">
                     تفاصيل المشروع
                     <ArrowLeft className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
