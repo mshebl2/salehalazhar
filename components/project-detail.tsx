@@ -3,22 +3,23 @@
 import { useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { CheckCircle, ArrowLeft, MessageCircle, MapPin, Calendar, Ruler, Clock } from "lucide-react"
+import { CheckCircle, ArrowLeft, MessageCircle, MapPin, Calendar, Ruler, Clock, Image as ImageIcon } from "lucide-react"
 import Link from "next/link"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 
 interface ProjectDetailProps {
   project: {
     title: string
-    location: string
-    category: string
+    location?: string
+    category?: string
     description: string
-    area: string
-    duration: string
-    year: string
-    image: string
-    images: string[]
-    services: string[]
-    features: string[]
+    area?: string
+    duration?: string
+    year?: string
+    image?: string
+    images?: string[]
+    services?: string[]
+    features?: string[]
   }
 }
 
@@ -32,10 +33,12 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
     renovation: "ترميم",
   }
 
-  // Combine main image with additional images
+  // Combine main image with additional images, with fallbacks
   const allImages = project.images && project.images.length > 0 
-    ? [project.image, ...project.images] 
-    : [project.image]
+    ? [project.image, ...project.images].filter(Boolean)
+    : project.image 
+    ? [project.image]
+    : [`/placeholder.svg?height=600&width=1200&query=${encodeURIComponent(project.title)} project banner`]
 
   return (
     <>
@@ -43,16 +46,33 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       <section className="relative py-32 overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src={project.image || `/placeholder.svg?height=600&width=1200&query=${project.title} project banner`}
+            src={allImages[0] || `/placeholder.svg?height=600&width=1200&query=${encodeURIComponent(project.title)} project banner`}
             alt={project.title}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-[#0D2240]/70" />
         </div>
         <div className="container mx-auto px-4 relative z-10">
+          {/* Breadcrumb */}
+          <Breadcrumb className="mb-8">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/" className="text-white hover:text-[#C4D600]">الرئيسية</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/projects" className="text-white hover:text-[#C4D600]">المشاريع</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-[#C4D600]">{project.title}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+
           <div className="text-center text-white max-w-4xl mx-auto">
             <div className="bg-[#C4D600] text-[#0D2240] px-4 py-2 rounded-full text-sm font-medium inline-block mb-4">
-              {categoryNames[project.category as keyof typeof categoryNames] || project.category}
+              {categoryNames[project.category as keyof typeof categoryNames] || project.category || "مشروع"}
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">{project.title}</h1>
             <p className="text-xl md:text-2xl leading-relaxed text-balance opacity-90">{project.description}</p>
@@ -68,31 +88,30 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
             <div className="lg:col-span-2">
               <div className="relative mb-6">
                 <img
-                  src={
-                    allImages[activeImage] ||
-                    `/placeholder.svg?height=500&width=800&query=${project.title} main view`
-                  }
+                  src={allImages[activeImage] || `/placeholder.svg?height=500&width=800&query=${encodeURIComponent(project.title)} main view`}
                   alt={project.title}
                   className="w-full h-96 object-cover rounded-lg shadow-lg"
                 />
+                {allImages.length > 1 && (
+                  <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+                    {activeImage + 1} / {allImages.length}
+                  </div>
+                )}
               </div>
 
               {/* Image Thumbnails */}
               {allImages.length > 1 && (
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-4 gap-2">
                   {allImages.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setActiveImage(index)}
-                      className={`relative rounded-lg overflow-hidden ${activeImage === index ? "ring-2 ring-[#C4D600]" : ""}`}
+                      className={`relative rounded-lg overflow-hidden transition-all ${activeImage === index ? "ring-2 ring-[#C4D600] scale-105" : "hover:scale-105"}`}
                     >
                       <img
-                        src={
-                          image ||
-                          `/placeholder.svg?height=150&width=200&query=${project.title} view ${index + 1}`
-                        }
+                        src={image || `/placeholder.svg?height=150&width=200&query=${encodeURIComponent(project.title)} view ${index + 1}`}
                         alt={`${project.title} - صورة ${index + 1}`}
-                        className="w-full h-20 object-cover hover:scale-105 transition-transform"
+                        className="w-full h-20 object-cover"
                       />
                     </button>
                   ))}
@@ -105,36 +124,42 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
               <Card className="p-6 mb-6">
                 <h3 className="text-xl font-bold text-[#0D2240] mb-4">تفاصيل المشروع</h3>
                 <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-[#C4D600]" />
-                    <div>
-                      <span className="text-sm text-[#2D3640]">الموقع</span>
-                      <p className="font-medium text-[#0D2240]">
-                        {project.location}
-                      </p>
+                  {project.location && (
+                    <div className="flex items-center gap-3">
+                      <MapPin className="w-5 h-5 text-[#C4D600]" />
+                      <div>
+                        <span className="text-sm text-[#2D3640]">الموقع</span>
+                        <p className="font-medium text-[#0D2240]">{project.location}</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Ruler className="w-5 h-5 text-[#C4D600]" />
-                    <div>
-                      <span className="text-sm text-[#2D3640]">المساحة</span>
-                      <p className="font-medium text-[#0D2240]">{project.area}</p>
+                  )}
+                  {project.area && (
+                    <div className="flex items-center gap-3">
+                      <Ruler className="w-5 h-5 text-[#C4D600]" />
+                      <div>
+                        <span className="text-sm text-[#2D3640]">المساحة</span>
+                        <p className="font-medium text-[#0D2240]">{project.area}</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Clock className="w-5 h-5 text-[#C4D600]" />
-                    <div>
-                      <span className="text-sm text-[#2D3640]">مدة التنفيذ</span>
-                      <p className="font-medium text-[#0D2240]">{project.duration}</p>
+                  )}
+                  {project.duration && (
+                    <div className="flex items-center gap-3">
+                      <Clock className="w-5 h-5 text-[#C4D600]" />
+                      <div>
+                        <span className="text-sm text-[#2D3640]">مدة التنفيذ</span>
+                        <p className="font-medium text-[#0D2240]">{project.duration}</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Calendar className="w-5 h-5 text-[#C4D600]" />
-                    <div>
-                      <span className="text-sm text-[#2D3640]">سنة الإنجاز</span>
-                      <p className="font-medium text-[#0D2240]">{project.year}</p>
+                  )}
+                  {project.year && (
+                    <div className="flex items-center gap-3">
+                      <Calendar className="w-5 h-5 text-[#C4D600]" />
+                      <div>
+                        <span className="text-sm text-[#2D3640]">سنة الإنجاز</span>
+                        <p className="font-medium text-[#0D2240]">{project.year}</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </Card>
 
@@ -169,7 +194,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
 
             <div className="grid md:grid-cols-2 gap-8">
               {project.features.map((feature, index) => (
-                <Card key={index} className="p-6">
+                <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
                   <div className="flex items-start gap-4">
                     <div className="bg-[#C4D600] p-2 rounded-full flex-shrink-0">
                       <CheckCircle className="w-5 h-5 text-[#0D2240]" />
