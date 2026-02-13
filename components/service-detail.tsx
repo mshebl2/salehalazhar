@@ -10,6 +10,8 @@ type ServiceDetailProps = {
     details: string
     href: string
     icon: string
+    image?: string
+    gallery?: string[]
     order: number
     features?: string[]
     benefits?: string[]
@@ -63,13 +65,25 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
                 </Link>
               </div>
             </div>
+
             <div className="relative w-full h-96 lg:h-[500px]">
-              <div className="w-full h-full bg-gradient-to-br from-[#0D2240] to-[#C4D600] rounded-3xl shadow-2xl flex items-center justify-center overflow-hidden">
-                <div className="text-center p-8">
-                  <span className="text-6xl text-white mb-4 block">{service.icon}</span>
-                  <h3 className="text-2xl font-bold text-white">{service.title}</h3>
+              {service.image ? (
+                <div className="w-full h-full rounded-3xl overflow-hidden shadow-2xl relative">
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-              </div>
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-[#0D2240] to-[#C4D600] rounded-3xl shadow-2xl flex items-center justify-center overflow-hidden">
+                  <div className="text-center p-8">
+                    <span className="text-6xl text-white mb-4 block">{service.icon}</span>
+                    <h3 className="text-2xl font-bold text-white">{service.title}</h3>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -123,24 +137,30 @@ export default function ServiceDetail({ service }: ServiceDetailProps) {
         </section>
       )}
 
-      {/* Details */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
+      {/* Gallery Section */}
+      {service.gallery && service.gallery.length > 0 && (
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold text-[#0D2240] mb-4">تفاصيل الخدمة</h2>
+              <h2 className="text-3xl lg:text-4xl font-bold text-[#0D2240] mb-4">معرض الصور</h2>
               <div className="w-24 h-1 bg-[#C4D600] mx-auto rounded-full"></div>
             </div>
-            <div className="prose prose-lg max-w-none">
-              <div className="p-8 lg:p-12 bg-gray-50 rounded-3xl shadow-xl">
-                <div className="whitespace-pre-wrap text-gray-700 leading-relaxed text-lg">
-                  {service.details}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {service.gallery.map((img, idx) => (
+                <div key={idx} className="relative h-64 rounded-xl overflow-hidden group shadow-lg">
+                  <Image
+                    src={img}
+                    alt={`${service.title} gallery ${idx + 1}`}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
                 </div>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* CTA Section */}
       <section className="py-20 bg-[#0D2240]">

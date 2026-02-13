@@ -1,32 +1,32 @@
-import mongoose, { Schema, Model } from "mongoose"
+
+import mongoose, { Schema, Model } from "mongoose";
 
 export interface IInternalLinkMapping {
-    keyword: string
-    url: string
-    priority: number
-    caseSensitive: boolean
-    maxOccurrences: number
-    isActive: boolean
-    flexibleMatch?: boolean
-    createdAt: Date
-    updatedAt: Date
+    keyword: string;
+    url: string;
+    priority: number;
+    caseSensitive: boolean;
+    maxOccurrences: number;
+    isActive: boolean;
+    description: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const InternalLinkMappingSchema = new Schema<IInternalLinkMapping>(
     {
-        keyword: { type: String, required: true },
+        keyword: { type: String, required: true, unique: true },
         url: { type: String, required: true },
-        priority: { type: Number, default: 1 },
+        priority: { type: Number, default: 0 }, // Higher priority links are applied first
         caseSensitive: { type: Boolean, default: false },
-        maxOccurrences: { type: Number, default: 3 },
+        maxOccurrences: { type: Number, default: 1 }, // Max times this keyword can be linked per post
         isActive: { type: Boolean, default: true },
-        flexibleMatch: { type: Boolean, default: true },
+        description: { type: String, default: '' }, // Admin note
     },
-    {
-        timestamps: true,
-    }
-)
+    { timestamps: true }
+);
 
-const InternalLinkMapping: Model<IInternalLinkMapping> = mongoose.models.InternalLinkMapping || mongoose.model<IInternalLinkMapping>("InternalLinkMapping", InternalLinkMappingSchema)
+const InternalLinkMapping: Model<IInternalLinkMapping> =
+    mongoose.models.InternalLinkMapping || mongoose.model<IInternalLinkMapping>("InternalLinkMapping", InternalLinkMappingSchema);
 
-export default InternalLinkMapping
+export default InternalLinkMapping;

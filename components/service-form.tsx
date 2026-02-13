@@ -28,6 +28,8 @@ export default function ServiceForm({ service, isEdit }: ServiceFormProps) {
     const [selectedIcon, setSelectedIcon] = useState(service?.icon || "HelpCircle")
     const [features, setFeatures] = useState<string[]>(service?.features || [])
     const [benefits, setBenefits] = useState<string[]>(service?.benefits || [])
+    const [imageUrl, setImageUrl] = useState(service?.image || "")
+    const [gallery, setGallery] = useState<string[]>(service?.gallery || [])
     const [newFeature, setNewFeature] = useState("")
     const [newBenefit, setNewBenefit] = useState("")
 
@@ -46,6 +48,13 @@ export default function ServiceForm({ service, isEdit }: ServiceFormProps) {
         if (benefits.length > 0) {
             benefits.forEach((benefit, index) => {
                 formData.append(`benefits[${index}]`, benefit)
+            })
+        }
+
+        formData.set("image", imageUrl)
+        if (gallery.length > 0) {
+            gallery.forEach((img, index) => {
+                formData.append(`gallery[${index}]`, img)
             })
         }
 
@@ -119,6 +128,180 @@ export default function ServiceForm({ service, isEdit }: ServiceFormProps) {
                         <div className="grid gap-2">
                             <Label htmlFor="href" className="text-right">الرابط (يتم إنشاؤه تلقائياً)</Label>
                             <Input id="href" name="href" defaultValue={service?.href} placeholder="/services/service-name" className="text-right" dir="ltr" />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-[#0D2240]">الصور</h3>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="image" className="text-right">صورة الخدمة الرئيسية</Label>
+                        <div className="flex gap-2 items-center">
+                            <Input
+                                id="image"
+                                name="image"
+                                value={imageUrl}
+                                onChange={(e) => setImageUrl(e.target.value)}
+                                className="text-right"
+                                placeholder="/path/to/image.jpg"
+                            />
+                            <Input
+                                type="file"
+                                accept="image/*"
+                                className="w-24"
+                                onChange={async (e) => {
+                                    const file = e.target.files?.[0]
+                                    if (!file) return
+                                    const formData = new FormData()
+                                    formData.append("file", file)
+                                    try {
+                                        const res = await fetch("/api/upload", { method: "POST", body: formData })
+                                        if (res.ok) {
+                                            const data = await res.json()
+                                            setImageUrl(data.url)
+                                        }
+                                    } catch (err) {
+                                        console.error(err)
+                                    }
+                                }}
+                            />
+                        </div>
+                        {imageUrl && (
+                            <div className="mt-2 h-32 w-full max-w-xs relative rounded-lg overflow-hidden border">
+                                <img src={imageUrl} alt="preview" className="object-cover w-full h-full" />
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label className="text-right">معرض الصور</Label>
+                        <div className="flex gap-2 items-center">
+                            <Input
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                onChange={async (e) => {
+                                    const files = e.target.files
+                                    if (!files || files.length === 0) return
+
+                                    for (let i = 0; i < files.length; i++) {
+                                        const formData = new FormData()
+                                        formData.append("file", files[i])
+                                        try {
+                                            const res = await fetch("/api/upload", { method: "POST", body: formData })
+                                            if (res.ok) {
+                                                const data = await res.json()
+                                                setGallery(prev => [...prev, data.url])
+                                            }
+                                        } catch (err) {
+                                            console.error(err)
+                                        }
+                                    }
+                                }}
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+                            {gallery.map((img, idx) => (
+                                <div key={idx} className="relative group h-24 rounded-lg overflow-hidden border">
+                                    <img src={img} alt={`gallery-${idx}`} className="w-full h-full object-cover" />
+                                    <button
+                                        type="button"
+                                        onClick={() => setGallery(prev => prev.filter((_, i) => i !== idx))}
+                                        className="absolute top-1 right-1 bg-red-500/80 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <LucideIcons.Trash2 className="w-4 h-4" />
+                                    </button>
+                                    <input type="hidden" name={`gallery[${idx}]`} value={img} />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-[#0D2240]">الصور</h3>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="image" className="text-right">صورة الخدمة الرئيسية</Label>
+                        <div className="flex gap-2 items-center">
+                            <Input
+                                id="image"
+                                name="image"
+                                value={imageUrl}
+                                onChange={(e) => setImageUrl(e.target.value)}
+                                className="text-right"
+                                placeholder="/path/to/image.jpg"
+                            />
+                            <Input
+                                type="file"
+                                accept="image/*"
+                                className="w-24"
+                                onChange={async (e) => {
+                                    const file = e.target.files?.[0]
+                                    if (!file) return
+                                    const formData = new FormData()
+                                    formData.append("file", file)
+                                    try {
+                                        const res = await fetch("/api/upload", { method: "POST", body: formData })
+                                        if (res.ok) {
+                                            const data = await res.json()
+                                            setImageUrl(data.url)
+                                        }
+                                    } catch (err) {
+                                        console.error(err)
+                                    }
+                                }}
+                            />
+                        </div>
+                        {imageUrl && (
+                            <div className="mt-2 h-32 w-full max-w-xs relative rounded-lg overflow-hidden border">
+                                <img src={imageUrl} alt="preview" className="object-cover w-full h-full" />
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label className="text-right">معرض الصور</Label>
+                        <div className="flex gap-2 items-center">
+                            <Input
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                onChange={async (e) => {
+                                    const files = e.target.files
+                                    if (!files || files.length === 0) return
+
+                                    for (let i = 0; i < files.length; i++) {
+                                        const formData = new FormData()
+                                        formData.append("file", files[i])
+                                        try {
+                                            const res = await fetch("/api/upload", { method: "POST", body: formData })
+                                            if (res.ok) {
+                                                const data = await res.json()
+                                                setGallery(prev => [...prev, data.url])
+                                            }
+                                        } catch (err) {
+                                            console.error(err)
+                                        }
+                                    }
+                                }}
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+                            {gallery.map((img, idx) => (
+                                <div key={idx} className="relative group h-24 rounded-lg overflow-hidden border">
+                                    <img src={img} alt={`gallery-${idx}`} className="w-full h-full object-cover" />
+                                    <button
+                                        type="button"
+                                        onClick={() => setGallery(prev => prev.filter((_, i) => i !== idx))}
+                                        className="absolute top-1 right-1 bg-red-500/80 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <LucideIcons.Trash2 className="w-4 h-4" />
+                                    </button>
+                                    <input type="hidden" name={`gallery[${idx}]`} value={img} />
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

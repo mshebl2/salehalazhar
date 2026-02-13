@@ -99,6 +99,31 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     internalLinksApplied: post.internalLinksApplied || [],
   }
 
+  // Fallback: If no processed content (migrated posts), process it now
+  if (!post.processedContent && post.content) {
+    try {
+      // We import these dynamically to avoid edge runtime issues if any (though this is a server component)
+      const { generateInternalLinks } = await import("@/lib/internal-linking")
+      const InternalLinkMapping = (await import("@/models/InternalLinkMapping")).default
+      // const SEOConfig = (await import("@/models/SEOConfig")).default
+
+      const mappings = await InternalLinkMapping.find({ isActive: true })
+
+      const result = generateInternalLinks({
+        content: post.content,
+        autoLinks: mappings,
+        manualLinks: [],
+        useAutoLinks: true,
+        maxLinksPerPost: 5 // Default or fetch from config
+      })
+
+      postData.content = result.processedContent
+      postData.internalLinksApplied = result.linksApplied
+    } catch (err) {
+      console.error("Error generating internal links on fly:", err)
+    }
+  }
+
   return (
     <main className="min-h-screen bg-white">
       <Head>

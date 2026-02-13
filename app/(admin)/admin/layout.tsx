@@ -12,7 +12,8 @@ import {
     Menu,
     X,
     FolderOpen,
-    User
+    User,
+    Link as LinkIcon
 } from "lucide-react"
 
 export default function AdminLayout({
@@ -44,6 +45,7 @@ export default function AdminLayout({
                     <NavItem href="/admin/projects" icon={Building2} label="المشاريع" />
                     <NavItem href="/admin/services" icon={Wrench} label="الخدمات" />
                     <NavItem href="/admin/blog" icon={FileText} label="المدونة" />
+                    <NavItem href="/admin/internal-links" icon={LinkIcon} label="الروابط الداخلية" />
                     <NavItem href="/admin/media" icon={ImageIcon} label="مكتبة الوسائط" />
                     <NavItem href="/admin/content" icon={Settings} label="محتوى الموقع" />
                 </div>

@@ -14,10 +14,12 @@ export async function createService(formData: FormData) {
     const href = formData.get("href")
     const icon = formData.get("icon")
     const order = formData.get("order")
+    const image = formData.get("image")
 
     // Extract arrays from form data
     const features: string[] = []
     const benefits: string[] = []
+    const gallery: string[] = []
 
     // Get all features and benefits from form data
     for (let [key, value] of formData.entries()) {
@@ -25,6 +27,8 @@ export async function createService(formData: FormData) {
             features.push(value as string)
         } else if (key.startsWith('benefits[')) {
             benefits.push(value as string)
+        } else if (key.startsWith('gallery[')) {
+            gallery.push(value as string)
         }
     }
 
@@ -39,9 +43,11 @@ export async function createService(formData: FormData) {
             details: details as string,
             href: href as string,
             icon: icon as string,
+            image: image as string,
             order: order ? parseInt(order.toString()) : 0,
             features: features.length > 0 ? features : [],
-            benefits: benefits.length > 0 ? benefits : []
+            benefits: benefits.length > 0 ? benefits : [],
+            gallery: gallery.length > 0 ? gallery : []
         })
 
         revalidatePath("/admin/services")
@@ -64,10 +70,12 @@ export async function updateService(id: string, formData: FormData) {
     const href = formData.get("href")
     const icon = formData.get("icon")
     const order = formData.get("order")
+    const image = formData.get("image")
 
     // Extract arrays from form data
     const features: string[] = []
     const benefits: string[] = []
+    const gallery: string[] = []
 
     // Get all features and benefits from form data
     for (let [key, value] of formData.entries()) {
@@ -75,6 +83,8 @@ export async function updateService(id: string, formData: FormData) {
             features.push(value as string)
         } else if (key.startsWith('benefits[')) {
             benefits.push(value as string)
+        } else if (key.startsWith('gallery[')) {
+            gallery.push(value as string)
         }
     }
 
@@ -85,9 +95,11 @@ export async function updateService(id: string, formData: FormData) {
             details: details as string,
             href: href as string,
             icon: icon as string,
+            image: image as string,
             order: order ? parseInt(order.toString()) : 0,
             features: features.length > 0 ? features : [],
             benefits: benefits.length > 0 ? benefits : [],
+            gallery: gallery.length > 0 ? gallery : [],
             updatedAt: new Date()
         })
 

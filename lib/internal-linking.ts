@@ -1,7 +1,3 @@
-/**
- * Internal Linking Utilities
- * Intelligently inject internal links into blog content
- */
 
 export interface LinkMapping {
     keyword: string;
@@ -75,7 +71,7 @@ export function injectInternalLinks(
     linkMappings: LinkMapping[],
     maxLinksPerPost: number = 5
 ): InternalLinkResult {
-    let processedContent = content;
+    let processedContent = content || '';
     const linksApplied: string[] = [];
     let totalLinksAdded = 0;
 
@@ -232,6 +228,7 @@ export function injectInternalLinks(
  * Remove all internal links from content (for editing purposes)
  */
 export function removeInternalLinks(content: string): string {
+    if (!content) return '';
     return content.replace(
         /<a\s+href="[^"]*"\s+class="internal-link">([^<]+)<\/a>/gi,
         '$1'
@@ -303,40 +300,30 @@ export function generateInternalLinks(options: GenerateInternalLinksOptions): In
 }
 
 /**
- * Generate SEO metadata from content
+ * Generate basic SEO metadata from content
  */
-export function generateSEOFromContent(content: string, title: string): {
-    metaTitle: string
-    metaDescription: string
-    metaKeywords: string[]
-} {
-    // Extract keywords from content (simple implementation)
-    const words = content.toLowerCase().split(/\s+/)
-    const wordFrequency: { [key: string]: number } = {}
-    
-    // Count word frequency (excluding common words)
-    const stopWords = ['و', 'في', 'من', 'إلى', 'على', 'هذا', 'هذه', 'ذلك', 'تلك', 'التي', 'الذي', 'الذين', 'التي', 'كان', 'كانت', 'يكون', 'تكون']
-    
-    words.forEach(word => {
-        if (word.length > 3 && !stopWords.includes(word)) {
-            wordFrequency[word] = (wordFrequency[word] || 0) + 1
-        }
-    })
-    
-    // Get top keywords
-    const keywords = Object.entries(wordFrequency)
-        .sort(([, a], [, b]) => b - a)
-        .slice(0, 10)
-        .map(([word]) => word)
-    
-    // Generate meta description (first 150 characters)
-    const metaDescription = content.length > 150 
-        ? content.substring(0, 150) + '...'
-        : content
-    
+export function generateSEOFromContent(content: string, title: string) {
+    // Remove HTML tags
+    const plainText = content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+
+    // Generate description (first 160 chars)
+    const metaDescription = plainText.length > 160
+        ? plainText.substring(0, 157) + '...'
+        : plainText;
+
+    // Generate keywords (basic: split by space, filter small words, take top 10 unique)
+    // This is a very naive implementation
+    const words = plainText.toLowerCase()
+        .replace(/[^\w\s\u0600-\u06FF]/g, '') // Keep alphanumeric and Arabic
+        .split(/\s+/)
+        .filter(w => w.length > 3)
+        .filter(w => !['this', 'that', 'with', 'from', 'have', 'fi', 'min', 'ala'].includes(w));
+
+    const uniqueKeywords = Array.from(new Set(words)).slice(0, 10);
+
     return {
         metaTitle: title,
         metaDescription,
-        metaKeywords: keywords
-    }
+        metaKeywords: uniqueKeywords
+    };
 }
