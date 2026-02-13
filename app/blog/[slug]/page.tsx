@@ -124,6 +124,22 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     }
   }
 
+  // Fetch related posts
+  const relatedPostsRaw = await Post.find({
+    isPublished: true,
+    slug: { $ne: decodeURIComponent(params.slug) }
+  })
+    .sort({ createdAt: -1 })
+    .limit(3)
+    .select("title slug excerpt featuredImage")
+
+  const relatedPosts = relatedPostsRaw.map(p => ({
+    title: p.title,
+    slug: p.slug,
+    excerpt: p.excerpt || "",
+    image: p.featuredImage
+  }))
+
   return (
     <main className="min-h-screen bg-white">
       <Head>
@@ -152,8 +168,11 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
       <Header />
 
-      <div className="text-black [&_a]:text-blue-700 [&_a]:hover:text-blue-500 [&_.internal-link]:text-[#0D2240] [&_.internal-link]:font-semibold [&_.internal-link]:no-underline hover:[&_.internal-link]:underline">
-        <BlogPost post={postData} />
+      <div className="text-black 
+        [&_.prose_a]:text-blue-700 [&_.prose_a]:hover:text-blue-500 
+        [&_.prose_.internal-link]:text-[#0D2240] [&_.prose_.internal-link]:font-bold [&_.prose_.internal-link]:underline [&_.prose_.internal-link]:decoration-[#C4D600] [&_.prose_.internal-link]:decoration-2 [&_.prose_.internal-link]:underline-offset-4
+        hover:[&_.prose_.internal-link]:text-[#C4D600] transition-colors">
+        <BlogPost post={postData} relatedPosts={relatedPosts} />
       </div>
 
       <Footer />

@@ -104,9 +104,28 @@ export default function PostForm({ post, isEdit }: PostFormProps) {
                     )}
                 </div>
 
+                <div className="grid gap-2">
+                    <Label htmlFor="author">Author</Label>
+                    <Input id="author" name="author" defaultValue={post?.author || "مؤسسة صالح الأزهري"} />
+                </div>
+
                 <div className="flex items-center gap-2">
                     <Switch id="isPublished" name="isPublished" defaultChecked={post?.isPublished} />
                     <Label htmlFor="isPublished">Publish immediately</Label>
+                </div>
+
+                <div className="space-y-4 p-4 border rounded-lg bg-gray-50/50">
+                    <h3 className="font-semibold text-sm uppercase tracking-wider text-gray-500">SEO & Linking Settings</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex items-center gap-2">
+                            <Switch id="autoSEO" name="autoSEO" defaultChecked={post?.autoSEO ?? true} />
+                            <Label htmlFor="autoSEO">Automatic SEO Metadata</Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Switch id="autoInternalLinks" name="autoInternalLinks" defaultChecked={post?.autoInternalLinks ?? true} />
+                            <Label htmlFor="autoInternalLinks">Automatic Internal Links</Label>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="grid gap-2">

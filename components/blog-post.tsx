@@ -14,9 +14,15 @@ interface BlogPostProps {
     tags: string[]
     internalLinksApplied?: string[]
   }
+  relatedPosts?: {
+    title: string
+    slug: string
+    excerpt: string
+    image?: string
+  }[]
 }
 
-export default function BlogPost({ post }: BlogPostProps) {
+export default function BlogPost({ post, relatedPosts = [] }: BlogPostProps) {
   return (
     <>
       {/* Hero Section */}
@@ -67,23 +73,6 @@ export default function BlogPost({ post }: BlogPostProps) {
                   />
                 </div>
 
-                {/* Internal Links Applied */}
-                {post.internalLinksApplied && post.internalLinksApplied.length > 0 && (
-                  <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <h4 className="text-sm font-semibold text-blue-800 mb-2">روابط داخلية تمت إضافتها:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {post.internalLinksApplied.map((link, index) => (
-                        <span
-                          key={index}
-                          className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"
-                        >
-                          {link}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
                 {/* Article Body */}
                 <div
                   className="prose prose-lg max-w-none text-[#2D3640] leading-relaxed"
@@ -127,7 +116,6 @@ export default function BlogPost({ post }: BlogPostProps) {
                     </div>
                     <h3 className="text-lg font-bold text-[#0D2240] mb-1">{post.author}</h3>
                     <p className="text-[#2D3640] text-sm mb-4">خبير في مجال البناء والتشطيب مع سنوات من الخبرة العملية</p>
-                    <p className="text-xs text-[#2D3640]">متخصص في تقديم الحلول المبتكرة للمشاريع الإنشائية</p>
                   </div>
                 </Card>
 
@@ -135,18 +123,18 @@ export default function BlogPost({ post }: BlogPostProps) {
                 <Card className="p-6">
                   <h3 className="text-lg font-bold text-[#0D2240] mb-4">مقالات ذات صلة</h3>
                   <div className="space-y-4">
-                    <div className="border-b border-gray-200 pb-4">
-                      <h4 className="text-sm font-medium text-[#0D2240] mb-2">نصائح اختيار المواد المناسبة للبناء</h4>
-                      <p className="text-xs text-[#2D3640]">دليل شامل لاختيار أفضل المواد...</p>
-                    </div>
-                    <div className="border-b border-gray-200 pb-4">
-                      <h4 className="text-sm font-medium text-[#0D2240] mb-2">كيفية تقدير تكلفة مشروع البناء</h4>
-                      <p className="text-xs text-[#2D3640]">خطوات عملية لحساب التكلفة...</p>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-[#0D2240] mb-2">أحدث تقنيات العزل الحراري</h4>
-                      <p className="text-xs text-[#2D3640]">تعرف على أفضل طرق العزل...</p>
-                    </div>
+                    {relatedPosts.length > 0 ? (
+                      relatedPosts.map((related, index) => (
+                        <div key={index} className={index !== relatedPosts.length - 1 ? "border-b border-gray-200 pb-4" : ""}>
+                          <Link href={`/blog/${related.slug}`} className="group block">
+                            <h4 className="text-sm font-medium text-[#0D2240] mb-2 group-hover:text-[#C4D600] transition-colors">{related.title}</h4>
+                            <p className="text-xs text-[#2D3640] line-clamp-2">{related.excerpt}</p>
+                          </Link>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-sm text-gray-500">لا توجد مقالات ذات صلة حالياً</p>
+                    )}
                   </div>
                 </Card>
               </div>

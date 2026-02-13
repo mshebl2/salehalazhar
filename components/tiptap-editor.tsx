@@ -4,7 +4,8 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import { Button } from '@/components/ui/button'
-import { Bold, Italic, Strikethrough, Heading2, List, Quote } from 'lucide-react'
+import { Bold, Italic, Strikethrough, Heading2, List, Quote, Image as ImageIcon, Loader2 } from 'lucide-react'
+import { useRef, useState } from 'react'
 
 interface EditorProps {
     content: string
@@ -12,6 +13,9 @@ interface EditorProps {
 }
 
 export default function TiptapEditor({ content, onChange }: EditorProps) {
+    const fileInputRef = useRef<HTMLInputElement>(null)
+    const [isUploading, setIsUploading] = useState(false)
+
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -28,12 +32,46 @@ export default function TiptapEditor({ content, onChange }: EditorProps) {
         },
     })
 
+    const addImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file || !editor) return
+
+        const formData = new FormData()
+        formData.append('file', file)
+
+        try {
+            setIsUploading(true)
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            })
+
+            if (!res.ok) throw new Error('Upload failed')
+
+            const data = await res.json()
+            editor.chain().focus().setImage({ src: data.url }).run()
+        } catch (error) {
+            console.error('Image upload error:', error)
+            alert('Failed to upload image')
+        } finally {
+            setIsUploading(false)
+            if (fileInputRef.current) fileInputRef.current.value = ''
+        }
+    }
+
     if (!editor) {
         return null
     }
 
     return (
         <div className="space-y-2">
+            <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={addImage}
+            />
             <div className="flex flex-wrap gap-2 border rounded-md p-2 bg-muted/20">
                 <Button
                     type="button"
@@ -66,6 +104,15 @@ export default function TiptapEditor({ content, onChange }: EditorProps) {
                     onClick={() => editor.chain().focus().toggleBulletList().run()}
                 >
                     <List className="h-4 w-4" />
+                </Button>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading}
+                >
+                    {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImageIcon className="h-4 w-4" />}
                 </Button>
             </div>
             <EditorContent editor={editor} />
